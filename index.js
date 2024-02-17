@@ -1,10 +1,13 @@
+require('dotenv').config();
 const express = require('express');
-const routes = require('./routes');
-
+const cors = require('cors');
 const app = express();
-const port = 3000;
+app.use(cors());
 
-app.use('/',routes)
+
+const port = process.env.PORT || 3000;
+
+app.use('/api',require('./routes/index'));
 
 app.listen(port,() => {
     console.log(`esta en en http://localhost:${port}`);

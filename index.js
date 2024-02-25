@@ -3,14 +3,21 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const sequelize = require('./config/sequelizeConfig');
-app.use(cors());
+const bodyParser = require('body-parser');
 
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000;
 const url = process.env.URL_DOMAIN || 'http://localhost'
 
 
 app.use('/api',require('./routes/index'));
+
+app.get('/test', (req, res) => {
+    res.json({ message: '¡Esta es una ruta de prueba!' });
+});
 
 sequelize.sync({ force: false })
     .then(() => {

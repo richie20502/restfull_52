@@ -1,6 +1,8 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const validator = require("validator");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const passport = require('../config/passport');
+const User = require('../models/User');
+const keys = require('../config/keys');
 
 
 async function getUserById(req, res) {
@@ -71,7 +73,58 @@ async function createUser(req, res) {
   }
 }
 
+async function login(req, res) {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({ 
+                success : false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Credenciales inválidas' });
+        }
+
+        const payload = {
+            id: user.id,
+            email: user.email
+        };
+
+        jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+            if (err) {
+                throw err;
+            }
+            res.json({
+                success: true,
+                message: 'Inicio de sesión exitoso',
+                data: {
+                    token: 'Bearer ' + token,
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    lastname: user.lastname,
+                    phone: user.phone,
+                    image: user.image,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error en el inicio de sesión:', error);
+        res.status(500).json({ error: 'Error al procesar la solicitud' });
+    }
+}
+
 module.exports = {
   getUserById,
   createUser,
+  login,
 };

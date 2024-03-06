@@ -35,25 +35,19 @@ async function createUser(req, res) {
     const {
       email,
       name,
-      lastname,
-      phone,
+      apellidoPaterno,
+      apellidoMaterno,
       image = "imagen.jpg",
       password,
     } = req.body;
-
-    if (!validator.isEmail(email)) {
-      return res
-        .status(400)
-        .json({ error: "El formato del correo electrónico no es válido" });
-    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
       email,
       name,
-      lastname,
-      phone,
+      apellidoPaterno,
+      apellidoMaterno,
       image,
       password: hashedPassword,
     });

@@ -5,6 +5,7 @@ const User = require('../models/User');
 const keys = require('../config/keys');
 
 
+
 async function getUserById(req, res) {
   try {
     const userId = req.params.id;

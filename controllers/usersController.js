@@ -69,6 +69,7 @@ async function createUser(req, res) {
 }
 
 async function login(req, res) {
+  console.log("Llega al login");
     try {
         const { email, password } = req.body;
 

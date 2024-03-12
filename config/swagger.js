@@ -22,6 +22,12 @@ const options = {
                 description: "Servidor Local",
             },
         ],
+        security: [
+            {
+                // Define el tipo de autenticación y el nombre del esquema de seguridad
+                BasicAuth: [],
+            },
+        ],
     },
     apis: ['./routes/*.js'], 
 };
